@@ -1,0 +1,74 @@
+﻿@model BTVN.Models.TimezoneResponseModelPagination;
+@using Newtonsoft.Json;
+@{
+    var searchContent = ViewData["search_content"];
+    var totalPage = Model.totalPages ;
+    int currentPage =(int)ViewData["CurrentPage"];
+    var TimeZoneData = Model.content;
+    var urlNextPage = Url.Action("NextPage", "Main", new { index = currentPage, content = searchContent, totalpage = totalPage });
+    var urlPreviousPage = Url.Action("PreviousPage", "Main", new { index = currentPage, content = searchContent, totalpage = totalPage });
+}
+
+
+<div>
+        <form asp-action="GetData" asp-controller="Main" class="form-search d-flex justify-content-center" role="search">
+        <div class="searchable-dropdown" >
+            <input name="search-content" type="text" id="search-input" placeholder="Search">
+            <ul id="dropdown-list" class="dropdown-list"></ul>
+        </div>
+    </form>
+</div>
+
+<div class="List-box d-flex container" style="min-height: 250px;">
+    <div class="row justify-content-start">
+        <div  class="row content justify-content-between">
+            @foreach (var item in TimeZoneData)
+        {
+            var data = JsonConvert.SerializeObject(item);
+                <div class="Box-item d-inline-block col-sm-4" onclick="openModal(@data)">
+                <b>@item.name</b>
+                <br>
+                <span>@item.code</span>
+                <br>
+                <span>@item.description</span>
+            </div>
+        }
+        </div>
+    </div>
+</div>
+
+
+<div class="footerpagination d-flex justify-content-lg-start">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item">
+                <a href="@urlPreviousPage">
+                    <i class="fa-solid fa-angle-left"></i>
+                </a>
+            </li>
+            @{
+                for (var index = 1; index <= Model.totalPages; index++)
+                {
+                    if (index == currentPage)
+                    {
+                        <li class="page-item " onclick="TakeDataByPagination(@index)" style="font-weight:bolder;color:grey:dimgrey !important;">
+                        @Html.ActionLink($"{index}", "Getdata", "Main", new { index = index, content = searchContent })
+                        </li>
+                        continue;
+                    }
+                    
+                    <li class="page-item" onclick="TakeDataByPagination(@index)">
+                        @Html.ActionLink($"{index}", "Getdata", "Main", new { index = index, content = searchContent })
+                    </li>
+                }
+            }
+            <li class="page-item">
+                <a href="@urlNextPage">
+                    <i class="fa-solid fa-chevron-left fa-rotate-180"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+

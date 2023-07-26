@@ -1,0 +1,13 @@
+﻿
+@using Newtonsoft.Json;
+@{
+    var listobject = JsonConvert.SerializeObject(Model);
+}
+<div style="margin-top:250px">
+    <form asp-action="GetData" asp-controller="Main" class="form-search d-flex justify-content-center" role="search">
+        <div class="searchable-dropdown" >
+            <input name="search_content" onchange="SearchListTimeZone()" type="text" id="search-input" placeholder="Search">
+            <ul id="dropdown-list" class="dropdown-list"></ul>
+        </div>
+    </form>
+</div>
